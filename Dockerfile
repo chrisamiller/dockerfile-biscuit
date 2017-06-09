@@ -17,37 +17,11 @@ RUN apt-get update && apt-get --no-install-recommends install -y --force-yes \
     apt-get autoremove -y && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ /var/cache/oracle-jdk${JAVA_VERSION}-installer 
 
-############################
-# sambamba # 
-RUN apt-get update && apt-get install -y build-essential gcc-multilib apt-utils zlib1g-dev git wget
-
-RUN cd /tmp/ && \
-    wget https://github.com/ldc-developers/ldc/releases/download/v0.17.1/ldc2-0.17.1-linux-x86_64.tar.xz && \
-    tar xJf ldc2-0.17.1-linux-x86_64.tar.xz
-ENV PATH=/tmp/ldc2-0.17.1-linux-x86_64/bin/:$PATH
-ENV LIBRARY_PATH=/tmp/ldc2-0.17.1-linux-x86_64/lib/
-
-RUN cd /tmp/ && git clone --recursive https://github.com/lomereiter/sambamba.git
-
-RUN cd /tmp/sambamba && git checkout tags/v0.6.4 && make sambamba-ldmd2-64 
-
-RUN cp /tmp/sambamba/build/sambamba /usr/local/bin
-
-RUN rm -rf /tmp/sambamba
-
-ADD test.sh /
-RUN chmod 775 /test.sh
-
-RUN apt-get install -y libnss-sss
-
-RUN apt-get remove --yes --purge build-essential gcc-multilib apt-utils zlib1g-dev git wget
-
-RUN apt-get clean
 
 ################################
 # biscuit #
 ENV container docker
-    apt-get install libncurses5-dev -y
+RUN apt-get update && apt-get install -y build-essential gcc-multilib apt-utils zlib1g-dev git wget libncurses5-dev libnss-sss
 
 RUN cd / && \
     git clone https://github.com/zwdzwd/biscuit.git && \
@@ -63,6 +37,7 @@ RUN cd / && \
     cp samtools /usr/bin 
 
 VOLUME [ "/data" ]
+
 
 #how i run:
 #docker run -ti -d --name=biscuit_docker -v /root/biscuit:/data biscuit
