@@ -20,8 +20,14 @@ RUN apt-get update && apt-get --no-install-recommends install -y --force-yes \
 
 ################################
 # biscuit #
+
 ENV container docker
-RUN apt-get update && apt-get install -y build-essential gcc-multilib apt-utils zlib1g-dev git wget libncurses5-dev libnss-sss
+RUN apt-get update -y && \
+    apt-get install git -y && \
+    apt-get install build-essential -y && \
+    apt-get install zlib1g-dev -y && \
+    apt-get install libncurses5-dev -y && \
+    apt-get install wget -y
 
 RUN cd / && \
     git clone https://github.com/zwdzwd/biscuit.git && \
@@ -38,9 +44,3 @@ RUN cd / && \
 
 VOLUME [ "/data" ]
 
-
-#how i run:
-#docker run -ti -d --name=biscuit_docker -v /root/biscuit:/data biscuit
-
-#connect to live instance
-#docker exec -it biscuit_docker /bin/bash
