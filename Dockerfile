@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM zackramjan/biscuit
 MAINTAINER "Chris Miller" <c.a.miller@wustl.edu>
 
 ############################
@@ -16,31 +16,3 @@ RUN apt-get update && apt-get --no-install-recommends install -y --force-yes \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ /var/cache/oracle-jdk${JAVA_VERSION}-installer 
-
-
-################################
-# biscuit #
-
-ENV container docker
-RUN apt-get update -y && \
-    apt-get install git -y && \
-    apt-get install build-essential -y && \
-    apt-get install zlib1g-dev -y && \
-    apt-get install libncurses5-dev -y && \
-    apt-get install wget -y
-
-RUN cd / && \
-    git clone https://github.com/zwdzwd/biscuit.git && \
-    cd /biscuit && \
-    pwd && \
-    make && \
-    cp /biscuit/bin/biscuit /usr/bin && \
-    cd / && \
-    wget "https://github.com/samtools/samtools/releases/download/1.3.1/samtools-1.3.1.tar.bz2" && \
-    tar -jxvf samtools-1.3.1.tar.bz2 && \
-    cd samtools-1.3.1 && \
-    make && \
-    cp samtools /usr/bin 
-
-VOLUME [ "/data" ]
-
